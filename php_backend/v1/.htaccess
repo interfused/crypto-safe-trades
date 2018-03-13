@@ -1,0 +1,7 @@
+Options +FollowSymLinks
+RewriteEngine On # Turn on the rewriting engine
+RewriteRule ^trade-entries/?$ trade-entries.php [NC,L]
+RewriteRule ^trade-entries/([0-9]+)/?$ trade-entries.php?id=$1 [NC,L]
+
+RewriteRule ^trade-exits/?$ trade-exits.php [NC,L]
+RewriteRule ^trade-exits/([^/]*)/?(.*)$ trade-exits.php?entry_id=$1&id=$2 [NC,L]

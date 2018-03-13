@@ -1,10 +1,55 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     Welcome to {{ title }}!
   </h1>
-<ul>
-  <li>https://www.djamware.com/post/5a878b3c80aca7059c142979/securing-mean-stack-angular-5-web-application-using-passport</li>
-  <li>https://medium.com/netscape/mean-app-tutorial-with-angular-4-part-1-18691663ea96</li>
-  <li>https://medium.com/@nomanbinhussein/mean-app-tutorial-with-angular-4-part-2-4250522c845</li>
-</ul>
+  <ul>
+    <li>https://www.djamware.com/post/5a878b3c80aca7059c142979/securing-mean-stack-angular-5-web-application-using-passport</li>
+    <li>https://medium.com/netscape/mean-app-tutorial-with-angular-4-part-1-18691663ea96</li>
+    <li>https://medium.com/@nomanbinhussein/mean-app-tutorial-with-angular-4-part-2-4250522c845</li>
+  </ul>
+</div>
+
+<div class="positions" *ngIf="positionsList"  >
+  <h2>My Positions</h2>
+  
+  <ul>
+    <li *ngFor="let position of positionsList">
+      <div>
+        
+        <h2>{{position.currency}}/{{position.base_currency}} || {{position.trade_pair}}</h2>
+        <div class="entries">
+          <h4>Entry Detail</h4>
+          Date: {{position.date}}<br>
+          Purchased: {{position.purchased_qty}} <br>
+          Price: {{position.purchase_price}}<br>
+          Total: {{ getTotal( position.purchased_qty , position.purchase_price ) }}<br>
+          Exchange: {{position.exchange}}
+        </div>
+        
+        <div class="exits">
+          <h4>Exit Details</h4>
+        </div>
+        
+      </div>
+    </li>
+  </ul>
+  
+</div>
+
+<hr>
+<div class="add-position-entry">
+  <form>
+  <h2>What trade pair would you like to initiate?</h2>
+  <!-- todo make dynamic -->
+  <select name="trade_pair" id="trade_pair" [(ngModel)]="newPosition.trade_pair" >
+    <option value="BTC/NEO">BTC/NEO</option>
+    <option value="BTC/NEO">BTC/ADA</option>
+    <option value="BTC/XRP">BTC/XRP</option>  
+  </select>
+  <label>desired qty</label>
+  <input type="text" name="purchased_qty" id="purchased_qty"  [(ngModel)]="newPosition.purchased_qty" placeholder="###" class="form-control">
+  <input type="text" name="purchase_price" id="purchase_price"  [(ngModel)]="newPosition.purchase_price" placeholder="###" class="form-control">
+  
+       <button type="submit" (click)="createEntry()">Add Position</button>
+  </form>
+</div>

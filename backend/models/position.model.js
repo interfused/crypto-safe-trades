@@ -7,6 +7,7 @@ var mongoosePaginate = require('mongoose-paginate')
 var PositionSchma = new mongoose.Schema({
     trade_id: String,
     exchange: String,
+    trade_pair: String,
     currency: String,
     base_currency: String,
     purchased_qty: String,
