@@ -39,6 +39,7 @@ exports.createPosition = async function(position){
 
     var newPosition = new PositionModel({
         trade_id: position.trade_id,
+        trade_pair: position.trade_pair,
         exchange: position.exchange,
         currency: position.currency,
         base_currency: position.base_currency,
@@ -86,6 +87,7 @@ exports.updatePosition = async function(position){
 
     oldPosition.trade_id = position.trade_id;
     oldPosition.exchange = position.exchange;
+    oldPosition.trade_pair = position.trade_pair;
     oldPosition.currency = position.currency;
     oldPosition.base_currency = position.base_currency;
     oldPosition.purchased_qty = position.purchased_qty;

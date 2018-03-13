@@ -1,6 +1,7 @@
 class Position {
     trade_id: string;
     exchange: string;
+    trade_pair: string;
     currency: string;
     base_currency: string;
     purchased_qty: string;
@@ -11,6 +12,7 @@ class Position {
     constructor(){
       this.trade_id = "";
       this.exchange = "";
+      this.trade_pair = "";
       this.currency = "";
       this.base_currency = "";
       this.purchased_qty = "";

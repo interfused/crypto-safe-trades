@@ -18,16 +18,14 @@ export class AppComponent implements OnInit {
     console.log('constructed');  
   }
   
-  getTotal(price, qty, commission ){
-    return Number(price) * Number(qty);
-  }
-
+  
   
   //Declaring the new position Object and initilizing it
   public newPosition: Position = new Position();
   
   //An Empty list for the visible positions list
   positionsList: Position[];
+  editPositions: Position[] = [];
   
   ngOnInit(): void {
     console.log('ng app component on iti');
@@ -39,5 +37,20 @@ export class AppComponent implements OnInit {
         console.log(positions);
       });
   }
+  
+  getTotal(price, qty, commission ){
+    return Number(price) * Number(qty);
+  }
+  
+  //This method will get called on Create button event
+  createEntry(){
+    console.log('create the entry');
+    this.positionService.createPosition(this.newPosition)
+    .subscribe((res) => {
+      this.positionsList.push(res.data);
+      this.newPosition = new Position();
+    });
+  }
+
   
 }

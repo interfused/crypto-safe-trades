@@ -16,7 +16,7 @@
     <li *ngFor="let position of positionsList">
       <div>
         
-        <h2>{{position.currency}}/{{position.base_currency}}</h2>
+        <h2>{{position.currency}}/{{position.base_currency}} || {{position.trade_pair}}</h2>
         <div class="entries">
           <h4>Entry Detail</h4>
           Date: {{position.date}}<br>
@@ -34,4 +34,22 @@
     </li>
   </ul>
   
+</div>
+
+<hr>
+<div class="add-position-entry">
+  <form>
+  <h2>What trade pair would you like to initiate?</h2>
+  <!-- todo make dynamic -->
+  <select name="trade_pair" id="trade_pair" [(ngModel)]="newPosition.trade_pair" >
+    <option value="BTC/NEO">BTC/NEO</option>
+    <option value="BTC/NEO">BTC/ADA</option>
+    <option value="BTC/XRP">BTC/XRP</option>  
+  </select>
+  <label>desired qty</label>
+  <input type="text" name="purchased_qty" id="purchased_qty"  [(ngModel)]="newPosition.purchased_qty" placeholder="###" class="form-control">
+  <input type="text" name="purchase_price" id="purchase_price"  [(ngModel)]="newPosition.purchase_price" placeholder="###" class="form-control">
+  
+       <button type="submit" (click)="createEntry()">Add Position</button>
+  </form>
 </div>
