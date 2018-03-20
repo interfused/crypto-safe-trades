@@ -1,0 +1,46 @@
+<div class="positions" *ngIf="positionsList"  >
+      <h2>My Positions</h2>
+      
+      <ul>
+        <li *ngFor="let position of positionsList">
+          <div>
+            
+            <h2 class="trade-item-header">{{position.trade_pair}}</h2>
+            <div class="trade-item__wrapper">
+            <div class="trade-item__entry-detail">
+              <h4>Entry Detail</h4>
+              Date: {{position.date}}<br>
+              Purchased: {{position.qty}} <br>
+              Price: {{position.price}}<br>
+              Total: {{ getTotal( position.qty , position.price ) }}<br>
+              Exchange: {{position.exchange_id}}
+            </div>
+            
+            <div class="trade-item__exit-details">
+              <h4>Exit Details</h4>
+            </div>
+          </div>
+            
+          </div>
+        </li>
+      </ul>
+      
+    </div>
+<hr>
+ 
+ <div class="add-position-entry">
+  <form>
+    <h2>What trade pair would you like to initiate?</h2>
+    <!-- todo make dynamic -->
+    <select name="trade_pair" id="trade_pair" [(ngModel)]="newPosition.trade_pair" >
+      <option value="BTC/NEO">BTC/NEO</option>
+      <option value="BTC/NEO">BTC/ADA</option>
+      <option value="BTC/XRP">BTC/XRP</option>  
+    </select>
+    <label>desired qty</label>
+    <input type="text" name="qty" id="qty"  [(ngModel)]="newPosition.qty" placeholder="###" class="form-control">
+    <input type="text" name="price" id="price"  [(ngModel)]="newPosition.price" placeholder="###" class="form-control">
+    
+    <button type="submit" (click)="createEntry()">Add Position</button>
+  </form>
+</div>

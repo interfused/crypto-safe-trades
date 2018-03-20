@@ -9,10 +9,17 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class PositionService {
-
+  
+  //LOCAL MEAN DEVELOPMENT
+  /*
   api_url = 'http://localhost:3000';
   positionUrl = `${this.api_url}/api/positions`;
-
+  */
+  
+  //PHP API
+  api_url = 'http://dev.interfusedcreative.com/crypto-safe-trades-api';
+  positionUrl = `${this.api_url}/v1/trade-entries`;
+  
   constructor(
     private http: HttpClient
   ) { }
@@ -31,7 +38,7 @@ export class PositionService {
     .map(res  => {
       //Maps the response object sent from the server
         
-      return res["data"].docs as Position[];
+      return res["data"].records as Position[];
     });
   }
   

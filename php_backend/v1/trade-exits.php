@@ -5,18 +5,18 @@ header("Access-Control-Allow-Origin: *");
 include_once '../config/database.php';
 include_once '../objects/trade-exit.php';
 
-$request_method=$_SERVER["REQUEST_METHOD"];
+$request_method=$_SERVER['REQUEST_METHOD'];
 
 //GET REQUEST METHOD
 switch($request_method)
 {
   case 'GET':
     // read all for parent ids
-    if(!empty($_GET["entry_id"])){
-      $entry_id = ($_GET["entry_id"]);
+    if(!empty($_GET['entry_id'])){
+      $entry_id = ($_GET['entry_id']);
       
-      if( !empty($_GET["id"]) ){        
-        $id = intval($_GET["id"]);
+      if( !empty($_GET['id']) ){        
+        $id = intval($_GET['id']);
         get_trade_exit_single($entry_id, $id);
 
       }else{
@@ -27,6 +27,7 @@ switch($request_method)
     }else{
       echo ( json_encode(
         array(
+          'status' => 404,
           'message' => 'no parent id provided'
         ) 
       ));
@@ -40,12 +41,13 @@ switch($request_method)
   
   case 'PUT':
     //update
-    if(!empty($_GET["entry_id"]) && !empty($_GET["id"])  ){
-      $id = intval($_GET["id"]);
+    if(!empty($_GET['entry_id']) && !empty($_GET['id'])  ){
+      $id = intval($_GET['id']);
       update_trade_exit($id);
     }else{
       echo ( json_encode(
         array(
+          'status' => 404,
           'message' => 'no id provided'
         ) 
       ));
@@ -54,12 +56,13 @@ switch($request_method)
   
   case 'DELETE':
     //delete
-    if(!empty($_GET["entry_id"]) && !empty($_GET["id"]) ){
-      $id = intval($_GET["id"]);
+    if(!empty($_GET['entry_id']) && !empty($_GET['id']) ){
+      $id = intval($_GET['id']);
       delete_trade_exit($id);
     }else{
       echo ( json_encode(
         array(
+          'status' => 404,
           'message' => 'no id provided'
         ) 
       )); 
@@ -99,9 +102,11 @@ function create_trade_exit(){
   
   // create the product
   if($tradeExit->create()){
-    $response['message'] = "Trade exit was created.";
+    $response['status'] = 200; 
+    $response['message'] = 'Trade exit was created.';
   }else{
-    $response['message'] = "Unable to create trade exit.";
+    $response['status'] = 204;
+    $response['message'] = 'Unable to create trade exit.';
   } 
   echo(json_encode($response));
 }
@@ -129,7 +134,7 @@ function get_trade_exits($entry_id){
   if($num>0){
   // products array
     $exits_arr = array();
-    $exits_arr["records"] = array();
+    $exits_arr['data']['records'] = array();
     
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -141,26 +146,29 @@ function get_trade_exits($entry_id){
       extract($row);
       
       $trade_item = array(
-        "id" => $id,
-        "user_id" => $user_id,
-        "entry_id" => $entry_id,
-        "trade_id" => $trade_id,
-        "exchange_id" => $exchange_id,
-        "trade_pair" => $trade_pair,
-        "date" => $date,
-        "qty" => $qty,
-        "price" => $price,
-        "executed" => $executed
+        'id' => $id,
+        'user_id' => $user_id,
+        'entry_id' => $entry_id,
+        'trade_id' => $trade_id,
+        'exchange_id' => $exchange_id,
+        'trade_pair' => $trade_pair,
+        'date' => $date,
+        'qty' => $qty,
+        'price' => $price,
+        'executed' => $executed
       );
       
-      array_push($exits_arr["records"], $trade_item);
+      array_push($exits_arr['data']['records'], $trade_item);
     }
     
     echo json_encode($exits_arr);
     
   }else{
     echo json_encode(
-      array("message" => "No trade entries found.")
+      array(
+        'status' => 204,
+        'message' => 'No trade entries found.'
+      )
     );
   }
 }
@@ -183,21 +191,23 @@ function get_trade_exit_single($entry_id='fakeID', $id = 0){
         
   if( empty($tradeExit->id) ){
     $response = array(
+      'status' => 204,
       'message' => 'No record found for '.$entry_id
     );
     
   }else{
     $response = array(
-      "id" =>  $tradeExit->id,
-      "user_id" => $tradeExit->user_id,
-      "entry_id" => $tradeExit->entry_id,
-      "trade_id" => $tradeExit->trade_id,
-      "exchange_id" => $tradeExit->exchange_id,
-      "trade_pair" => $tradeExit->trade_pair,
-      "date" => $tradeExit->date,
-      "qty" => $tradeExit->qty,
-      "price" => $tradeExit->price,
-      "executed" => $tradeExit->executed,    
+      'status' => 200,
+      'id' =>  $tradeExit->id,
+      'user_id' => $tradeExit->user_id,
+      'entry_id' => $tradeExit->entry_id,
+      'trade_id' => $tradeExit->trade_id,
+      'exchange_id' => $tradeExit->exchange_id,
+      'trade_pair' => $tradeExit->trade_pair,
+      'date' => $tradeExit->date,
+      'qty' => $tradeExit->qty,
+      'price' => $tradeExit->price,
+      'executed' => $tradeExit->executed,    
     );  
   }
   
@@ -232,9 +242,11 @@ function update_trade_exit($id){
   
   // update the tradeExit
   if($tradeExit->update()){
-    $response['message'] = "Trade exit was updated.";
+    $response['status'] = 200;
+    $response['message'] = 'Trade exit was updated.';
   }else{
-    $response['message'] = "Unable to update trade exit.";
+    $response['status'] = 204;
+    $response['message'] = 'Unable to update trade exit.';
   }
   
   echo(json_encode($response));
@@ -258,8 +270,10 @@ function delete_trade_exit($id){
   
   // delete the trade-exit
   if($tradeExit->delete()){
+    $response['status'] = 200;
     $response['message'] = 'Trade exit was deleted.';
   }else{
+    $response['status'] = 204;
     $response['message'] = 'Unable to delete trade exit.';
   }
   echo json_encode($response);

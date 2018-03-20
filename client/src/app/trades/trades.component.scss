@@ -1,0 +1,36 @@
+@import "../../variables.scss";
+@import "../../utils.scss";
+
+.trade-item{
+  
+  &__wrapper{
+    display: flex;
+    flex-direction: row;  
+  }
+  
+  &__entry-detail{
+    width: 30%;
+    padding: $padding-px;
+  }
+  
+  &__exit-details{
+    flex-grow: 1;
+    padding: $padding-px;
+  }
+}
+
+.trade-item-header{
+  @extend .tight;
+}
+
+.trade-item__entry-detail{
+  h4{
+    @extend .tight;
+  }
+}
+
+.trade-item__exit-details{
+  h4{
+    @extend .tight;
+  }
+}
