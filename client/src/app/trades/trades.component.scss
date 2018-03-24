@@ -34,3 +34,10 @@
     @extend .tight;
   }
 }
+
+label{
+  display: block;
+}
+.form-group{
+  padding-bottom: 1em;
+}

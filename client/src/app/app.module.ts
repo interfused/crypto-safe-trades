@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { PositionService } from './services/position.service';
+import { BinanceService } from './services/binance.service';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
     FormsModule
   ],
   providers: [
-    PositionService
+    PositionService,
+    BinanceService
   ],
   bootstrap: [AppComponent]
 })

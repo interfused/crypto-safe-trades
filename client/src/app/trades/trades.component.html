@@ -30,17 +30,57 @@
  
  <div class="add-position-entry">
   <form>
-    <h2>What trade pair would you like to initiate?</h2>
+    <h2>Trade Setups</h2>
     <!-- todo make dynamic -->
+    <div class="form-group">
+      <label>Choose Exchange</label>
+      <select name="exchange" (change)="selectExchange($event)">
+        <option value="">Select one</option>
+        <option *ngFor="let exchange of exchanges" value="{{exchange.id}}">{{exchange.name}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Select your base currency</label>
+      <fieldset id="baseCurrency">
+        <label><input type="radio" value="" name="baseCurrency" checked (click)="switchBaseCurrency($event)"  >ALL</label>
+        
+         <label *ngFor="let baseCurrency of baseCurrencies" >
+          <input type="radio" value="{{baseCurrency}}" name="baseCurrency" (click)="switchBaseCurrency($event)" >
+          {{baseCurrency}} 
+        </label>
+      
+    </fieldset>
+    </div>
+    <div class="form-group">
+      <label>Trade Pair</label>
     <select name="trade_pair" id="trade_pair" [(ngModel)]="newPosition.trade_pair" >
-      <option value="BTC/NEO">BTC/NEO</option>
-      <option value="BTC/NEO">BTC/ADA</option>
-      <option value="BTC/XRP">BTC/XRP</option>  
+      <option selected>Select</option>
+      <option *ngFor="let tradePair of filteredTradePairs">
+      {{tradePair.baseAsset}} / {{tradePair.quoteAsset}}
+    </option>
     </select>
-    <label>desired qty</label>
-    <input type="text" name="qty" id="qty"  [(ngModel)]="newPosition.qty" placeholder="###" class="form-control">
+  </div>
+  <div class="form-group">
+    <label>target price</label>
     <input type="text" name="price" id="price"  [(ngModel)]="newPosition.price" placeholder="###" class="form-control">
     
+  </div>
+  
+    <div class="form-group">
+    <label>desired quantity</label>
+    <input type="text" name="qty" id="qty"  [(ngModel)]="newPosition.qty" placeholder="###" class="form-control">
+    </div>
     <button type="submit" (click)="createEntry()">Add Position</button>
   </form>
+</div>
+
+<div>
+  <p>After selecting exchange should populate trade pairs</p>
+  <p>Base currency filter filters off of trade pairs</p>
+</div>
+
+<h2>Symbols </h2>
+<div *ngFor="let tradePair of filteredTradePairs">
+  {{tradePair.baseAsset}}/{{tradePair.quoteAsset}}
 </div>
