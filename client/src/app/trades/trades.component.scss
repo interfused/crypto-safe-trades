@@ -41,3 +41,29 @@ label{
 .form-group{
   padding-bottom: 1em;
 }
+
+.trade-pair__summary{
+  padding: $padding-px/2;
+  
+  &:nth-of-type(even){
+    background-color: #efefef;
+  }
+}
+
+ul.pricing {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li{
+      width: 16.67%;
+      font-size: .9rem;
+    }
+}
+
+ul.pricing.header {
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}

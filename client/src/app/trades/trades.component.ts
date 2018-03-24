@@ -25,6 +25,7 @@ export class TradesComponent implements OnInit {
   tradePairs = [];
   filteredTradePairs = []; //the potential filtered pair list
   baseCurrencies = [];
+  ticker24hr = [];
   
   constructor(
     //Private service will be injected into the component by Angular Dependency Injector
@@ -78,8 +79,23 @@ export class TradesComponent implements OnInit {
       this.filteredTradePairs = this.tradePairs;  
     }else{
       this.filteredTradePairs = this.tradePairs.filter( el => el.quoteAsset == e.target.value  );
-    }
+    } 
+  }
+  //COMBINE PRICING AND TRADE PAIR ARRAYS FOR BINANCE
+  combineArrays(){
+    console.log('COMBINE ARRAYS');
     
+    for(let i=0; i<this.tradePairs.length; i++){
+      let obj1 = this.tradePairs[i];
+      let symbol = this.tradePairs[i]['symbol'];
+      
+      let symbol24hrData = this.ticker24hr.filter(e => e.symbol === symbol );
+      this.tradePairs[i]['ticker24h'] = symbol24hrData[0];
+      //combine 
+      //this.tradePairs[i] = Object.assign({},obj1,symbol24hrData);
+    }
+    this.filteredTradePairs = this.tradePairs.filter (el => el.quoteAsset != '456');
+    console.log(this.tradePairs);
   }
   
   selectExchange(e:any){
@@ -97,18 +113,35 @@ export class TradesComponent implements OnInit {
           console.log(positions);
         });
         */
+        let hasRetrievedPricing = false;
+        let hasRetrievedTradePairs = false;
+        
         this.http.get('http://dev.interfusedcreative.com/crypto-safe-trades-api/v1/binance/get-info.php').subscribe(data => {
-          //          console.log(data.symbols);
+          hasRetrievedTradePairs = true;
           this.tradePairs = data['symbols'];
-          this.filteredTradePairs = this.tradePairs;          
+                    
           console.log('trade pairs');
           console.log(this.tradePairs);
-          console.log('///////////');
+          //console.log('///////////');
           this.baseCurrencies = this.tradePairs.map((e) => e.quoteAsset  )
                                 .filter (el => el != '456')
                                 .filter( this.onlyUniqueBaseCurrencies );
-          console.log('baseCurrencies');     
-          console.log(this.baseCurrencies);     
+          //console.log('baseCurrencies');     
+          //console.log(this.baseCurrencies);     
+          if(hasRetrievedPricing && hasRetrievedTradePairs){
+            this.combineArrays();
+          }
+        });
+        
+        this.http.get('http://dev.interfusedcreative.com/crypto-safe-trades-api/v1/binance/get-24hr-ticker.php').subscribe(data => {
+          this.ticker24hr = data;
+          console.log('pricing data');
+          console.log(this.ticker24hr);
+          hasRetrievedPricing = true;
+          
+          if(hasRetrievedPricing && hasRetrievedTradePairs){
+            this.combineArrays();
+          }
         });
       
       break;

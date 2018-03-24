@@ -81,6 +81,24 @@
 </div>
 
 <h2>Symbols </h2>
-<div *ngFor="let tradePair of filteredTradePairs">
-  {{tradePair.baseAsset}}/{{tradePair.quoteAsset}}
+<ul class="pricing header">
+    <li>Symbol</li>
+    <li>Last Price</li>
+    <li>24h Change</li>
+    <li>24h High</li>
+    <li>24h Low</li>
+    <li>24h Volume</li>
+  </ul>
+<div *ngFor="let tradePair of filteredTradePairs" class="trade-pair__summary"  >
+ <!-- <strong>{{tradePair.baseAsset}}/{{tradePair.quoteAsset}}</strong> -->
+  
+  <ul class="pricing detail">
+    <li>{{tradePair.symbol}}</li>
+    <li>{{tradePair.ticker24h.askPrice}}</li>
+    <li>{{tradePair.ticker24h.priceChangePercent}}%</li>
+    <li>{{tradePair.ticker24h.highPrice}}</li>
+    <li>{{tradePair.ticker24h.lowPrice}}</li>
+    <li>{{tradePair.ticker24h.quoteVolume}}</li>
+  </ul>
+  
 </div>
