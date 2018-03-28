@@ -3,6 +3,7 @@
 *.log
 *.sql
 *.sqlite
+php_backend/config/credentials.php
 
 # OS generated files #
 ######################

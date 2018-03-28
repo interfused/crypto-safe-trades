@@ -9,7 +9,7 @@ class Position {
     qty: string;
     price: string;
     date: Date;
-    fully_closed: string;
+    fully_closed: boolean;
     
     constructor(){
       this.id = "";
@@ -22,7 +22,7 @@ class Position {
       this.qty = "";
       this.price = "";
       this.date= new Date();
-      this.fully_closed = "";  
+      this.fully_closed = false;  
     }
 }
 

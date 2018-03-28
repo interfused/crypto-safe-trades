@@ -17,10 +17,11 @@ export class BinanceService {
   */
   
   //PHP API
-  api_url = 'https://api.binance.com';
-  //exchangeInfoUrl = `${this.api_url}/api/v1/exchangeInfo`;
-  exchangeInfoUrl = 'http://dev.interfusedcreative.com/crypto-safe-trades-api/v1/binance/get-info.php';
-  Symbol = [];
+  //api_url = 'https://api.binance.com';
+  api_url = 'http://dev.interfusedcreative.com/crypto-safe-trades-api';
+  exchangeInfoUrl = `${this.api_url}/v1/binance/get-info.php`;
+  ticker24hUrl= `${this.api_url}/v1/binance/get-24hr-ticker.php`;
+  
   
   constructor(
     private http: HttpClient
@@ -35,14 +36,26 @@ export class BinanceService {
   */
   
   //READ positions (takes no argument)
-  getInfo(): Observable<Symbol[]>{
+  getTradePairs(): Observable<Symbol[]>{
 
     return this.http.get(this.exchangeInfoUrl)
     .map(res  => {
       //Maps the response object sent from the server
-        
-      return res["data"].symbols as Symbol[];
+      return res["symbols"] as Symbol[];
     });
+  }
+  
+  get24hTicker(): Observable<Symbol[]>{
+
+    return this.http.get(this.ticker24hUrl)
+    .map(res  => {
+      //Maps the response object sent from the server
+      return res as Symbol[];
+    });
+  }
+  
+  createBuyOrder(){
+    
   }
   /*
   //UPDATE

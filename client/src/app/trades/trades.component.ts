@@ -19,13 +19,15 @@ export class TradesComponent implements OnInit {
   public newPosition: Position = new Position();
   
   //An Empty list for the visible positions list
-  positionsList: Position[];
+  positionsList: Position[] = [];
   editPositions: Position[] = [];
   apiExchangeInfoUrl = '';
   tradePairs = [];
   filteredTradePairs = []; //the potential filtered pair list
   baseCurrencies = [];
   ticker24hr = [];
+  selectedExchange = '';
+  userTradeSymbol = '';
   
   constructor(
     //Private service will be injected into the component by Angular Dependency Injector
@@ -38,8 +40,37 @@ export class TradesComponent implements OnInit {
   
   ngOnInit() {
     //At component initialization the 
+    this.getPositions();
+    
+    let hasRetrievedPricing = false;
+    let hasRetrievedTradePairs = false;
+    
+    this.binanceService.get24hTicker()
+    .subscribe(data => {
+      this.ticker24hr = data;
+      hasRetrievedPricing = true;
+      
+      if(hasRetrievedPricing && hasRetrievedTradePairs){
+        this.combineArrays();
+      }
+    });
+    
+    this.binanceService.getTradePairs()
+    .subscribe(data => {
+      hasRetrievedTradePairs = true;
+      this.tradePairs = data;
+      
+      this.baseCurrencies = this.tradePairs.map((e) => e.quoteAsset )
+      .filter (el => el != '456')
+      .filter( this.onlyUniqueBaseCurrencies );          
+    });
+  }
+  
+  getPositions(){
+    this.userTradeSymbol = '';
+    
     this.positionService.getPositions()
-      .subscribe(positions => {
+    .subscribe(positions => {
         //assign the todolist property to the proper http response
         this.positionsList = positions;
         console.log(positions);
@@ -99,10 +130,11 @@ export class TradesComponent implements OnInit {
   }
   
   selectExchange(e:any){
+    this.newPosition.exchange_id = e.target.value;
     
     switch(e.target.value){
       case "1":
-        console.log('binance');
+        this.selectedExchange = 'binance';
         //this.apiExchangeInfoUrl = 'https://api.binance.com/api/v1/exchangeInfo';
         //this.getData();
         /*
@@ -112,26 +144,9 @@ export class TradesComponent implements OnInit {
           //this.positionsList = positions;
           console.log(positions);
         });
-        */
+        
         let hasRetrievedPricing = false;
         let hasRetrievedTradePairs = false;
-        
-        this.http.get('http://dev.interfusedcreative.com/crypto-safe-trades-api/v1/binance/get-info.php').subscribe(data => {
-          hasRetrievedTradePairs = true;
-          this.tradePairs = data['symbols'];
-                    
-          console.log('trade pairs');
-          console.log(this.tradePairs);
-          //console.log('///////////');
-          this.baseCurrencies = this.tradePairs.map((e) => e.quoteAsset  )
-                                .filter (el => el != '456')
-                                .filter( this.onlyUniqueBaseCurrencies );
-          //console.log('baseCurrencies');     
-          //console.log(this.baseCurrencies);     
-          if(hasRetrievedPricing && hasRetrievedTradePairs){
-            this.combineArrays();
-          }
-        });
         
         this.http.get('http://dev.interfusedcreative.com/crypto-safe-trades-api/v1/binance/get-24hr-ticker.php').subscribe(data => {
           this.ticker24hr = data;
@@ -143,28 +158,48 @@ export class TradesComponent implements OnInit {
             this.combineArrays();
           }
         });
+        */
       
       break;
       
       case "2":
-        console.log('cryptopia');
+        this.selectedExchange = 'cryptopia';
       break;
       
       default:
-      console.log('unfilter');
+        console.log('unfilter');
+        this.selectedExchange = '';
       break;
     }
+    console.log(this.selectedExchange);
+        
   }
   
-   
+  selectPositionToOpen(base_asset,secondary_asset){
+    //EXAMPLE NEOBTC - Base asset would be BTC Secondary asset would be NEO
+    //binance
+    let symbol = secondary_asset + base_asset;
+    
+    this.newPosition.trade_pair = symbol;
+    this.newPosition.base_currency = base_asset;
+    this.newPosition.currency = secondary_asset;
+    
+    console.log('open position for: ' + this.selectedExchange);
+    this.userTradeSymbol = symbol;
+    console.log('symbol: ' + this.userTradeSymbol);
+  
+  }
   
   //This method will get called on Create button event
   createEntry(){
-    console.log('create the entry');
+    console.log('create buy trade for: ' + this.selectedExchange);
+    console.dir(this.newPosition); 
+
     this.positionService.createPosition(this.newPosition)
     .subscribe((res) => {
       this.positionsList.push(res.data);
       this.newPosition = new Position();
+      this.getPositions();
     });
   }
 

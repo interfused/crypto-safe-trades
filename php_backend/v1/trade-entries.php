@@ -1,15 +1,20 @@
 <?php
 //https://www.phpflow.com/php/create-php-restful-api-without-rest-framework-dependency/
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET,HEAD,OPTIONS,POST,PUT");
+header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 // include database and object files
 include_once '../config/database.php';
 include_once '../objects/trade-entry.php';
 
-$request_method=$_SERVER['REQUEST_METHOD'];
+$request_method = $_SERVER['REQUEST_METHOD'];
 
 //GET REQUEST METHOD
 switch($request_method)
 {
+  case 'OPTIONS':
+  break;
   case 'GET':
     // read
     if(!empty($_GET['id'])){
@@ -64,6 +69,7 @@ switch($request_method)
 
 // -------- CREATE -------- 
 function create_trade_entry(){
+
   $database = new Database();
   $db = $database->getConnection();
   $response = array();
