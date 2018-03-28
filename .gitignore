@@ -15,3 +15,4 @@ php_backend/config/credentials.php
 ehthumbs.db
 Thumbs.db
 sftp-config.json
+php_backend/sftp-config.json
