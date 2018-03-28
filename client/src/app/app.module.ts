@@ -6,8 +6,7 @@ import { BinanceService } from './services/binance.service';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-
+ 
 import { AppComponent } from './app.component';
 import { HelpComponent } from './help/help.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -19,10 +18,12 @@ import { PasswordComponent } from './user-profile/password/password.component';
 const appRoutes: Routes = [
   {path: 'tradesBackup', redirectTo: '/trades', pathMatch: 'full' },
   {path: '', component: TradesComponent },
+  {path: 'trades', component: TradesComponent },
   {path: 'help', component: HelpComponent},
   {path: 'my-account', component: UserProfileComponent},
   {path: '**', component: PageNotFoundComponent}
 ]
+
 
 @NgModule({
   declarations: [
