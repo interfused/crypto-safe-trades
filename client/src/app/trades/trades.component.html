@@ -1,0 +1,104 @@
+<div class="positions" *ngIf="positionsList"  >
+  <h2>My Positions</h2>
+  
+  <ul>
+    <li *ngFor="let position of positionsList">
+      <div>
+        
+        <h2 class="trade-item-header">{{position.trade_pair}}</h2>
+        <div class="trade-item__wrapper">
+          <div class="trade-item__entry-detail">
+            <h4>Entry Detail</h4>
+            Date: {{position.date}}<br>
+            Purchased: {{position.qty}} <br>
+            Price: {{position.price}}<br>
+            Total: {{ getTotal( position.qty , position.price ) }}<br>
+            Exchange: {{position.exchange_id}}
+          </div>
+          
+          <div class="trade-item__exit-details">
+            <h4>Exit Details</h4>
+          </div>
+        </div>
+        
+      </div>
+    </li>
+  </ul>
+  
+</div>
+<hr>
+
+<div class="add-position-entry">
+  <form>
+    <h2 class="page-title">{{this.selectedExchange}} Trade Setups</h2>
+    <!-- todo make dynamic -->
+    <div class="form-group">
+      <label>Choose Exchange</label>
+      <select name="exchange" (change)="selectExchange($event)">
+        <option value="">Select one</option>
+        <option *ngFor="let exchange of exchanges" value="{{exchange.id}}">{{exchange.name}}</option>
+      </select>
+    </div>
+  </form>
+  
+  
+  <form *ngIf="this.selectedExchange != ''"  >
+    <div class="form-group">
+      <label>Select your base currency</label>
+      <fieldset id="baseCurrency">
+        <label><input type="radio" value="" name="baseCurrency" checked (click)="switchBaseCurrency($event)"  >ALL</label>
+        
+        <label *ngFor="let baseCurrency of baseCurrencies" >
+          <input type="radio" value="{{baseCurrency}}" name="baseCurrency" (click)="switchBaseCurrency($event)" >
+          {{baseCurrency}} 
+        </label>
+        
+      </fieldset>
+    </div>
+    
+    <div class="tradePairWrapper">
+      <h3>Trade Pairs</h3>
+      <ul class="pricing header">
+        <li>Symbol</li>
+        <li>Last Price</li>
+        <li>24h Change</li>
+        <li>24h High</li>
+        <li>24h Low</li>
+        <li>24h Volume</li>
+        <li>&nbsp;</li>
+      </ul>
+      
+      <div class="trade-pair__summary-items-wrapper">
+        <div *ngFor="let tradePair of filteredTradePairs" class="trade-pair__summary"  >
+         <!-- <strong>{{tradePair.baseAsset}}/{{tradePair.quoteAsset}}</strong> -->
+         
+         <ul class="pricing detail"   >
+          <li>{{tradePair.symbol}}</li>
+          <li>{{tradePair.ticker24h.askPrice}}</li>
+          <li>{{tradePair.ticker24h.priceChangePercent}}%</li>
+          <li>{{tradePair.ticker24h.highPrice}}</li>
+          <li>{{tradePair.ticker24h.lowPrice}}</li>
+          <li>{{tradePair.ticker24h.quoteVolume}}</li>
+          <li class="actions"><button (click)="selectPositionToOpen(tradePair.quoteAsset, tradePair.baseAsset )">Buy</button></li>
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+  <div class="price-qty-wrapper" *ngIf="this.userTradeSymbol != ''">
+  <h2>{{this.userTradeSymbol}} Buy Position</h2>
+  
+  <div class="form-group half-col">
+      <label>Target Price</label>
+      <input type="text" name="price" id="price" required  [(ngModel)]="newPosition.price" placeholder="###" class="form-control">  
+    </div>
+    
+    <div class="form-group half-col">
+      <label>desired quantity</label>
+      <input type="text" name="qty" id="qty" required  [(ngModel)]="newPosition.qty" placeholder="###" class="form-control">
+    </div>
+    <button type="submit" (click)="createEntry()">Add Position</button>
+  </div>
+</form>
+</div>
+

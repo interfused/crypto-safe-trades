@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@import "variables.scss";
+
+html,body{
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+body{
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+input[disabled], button[disabled], div.disabled, label.disabled{
+  opacity: .5;
+}

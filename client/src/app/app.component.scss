@@ -1,0 +1,43 @@
+@import "../variables.scss";
+@import "../utils.scss";
+
+.shell{
+   
+   &__wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-height: 100vh;
+   }
+   
+   &__header{
+    background-color: $black;
+    color: $white;
+    padding: $padding-px;
+    text-align: center;
+    width: 100%;
+    
+    h1{
+      @extend .tight;
+    }
+   }
+   
+   &__nav{
+    width: 25%;
+    padding: $padding-px;
+    background-color: $gray1;
+    overflow: hidden;
+   }
+   
+   &__content{
+    flex-grow: 1;
+    padding: $padding-px;
+   } 
+}
+
+
+.shell__nav a{
+  &.active{
+    font-weight: bold;
+  }
+}

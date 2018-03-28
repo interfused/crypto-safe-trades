@@ -1,19 +1,24 @@
 <?php
 //https://www.phpflow.com/php/create-php-restful-api-without-rest-framework-dependency/
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET,HEAD,OPTIONS,POST,PUT");
+header("Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 // include database and object files
 include_once '../config/database.php';
 include_once '../objects/trade-entry.php';
 
-$request_method=$_SERVER["REQUEST_METHOD"];
+$request_method = $_SERVER['REQUEST_METHOD'];
 
 //GET REQUEST METHOD
 switch($request_method)
 {
+  case 'OPTIONS':
+  break;
   case 'GET':
     // read
-    if(!empty($_GET["id"])){
-      $id=intval($_GET["id"]);
+    if(!empty($_GET['id'])){
+      $id=intval($_GET['id']);
       get_trade_entry_single($id);
     }else{
       get_trade_entries();
@@ -27,12 +32,13 @@ switch($request_method)
   
   case 'PUT':
     //update
-    if(!empty($_GET["id"])){
-      $id=intval($_GET["id"]);
+    if(!empty($_GET['id'])){
+      $id=intval($_GET['id']);
       update_trade_entry($id);
     }else{
       echo ( json_encode(
         array(
+          'status' => 204,
           'message' => 'no id provided'
         ) 
       ));
@@ -41,12 +47,13 @@ switch($request_method)
   
   case 'DELETE':
     //delete
-    if(!empty($_GET["id"])){
-      $id=intval($_GET["id"]);
+    if(!empty($_GET['id'])){
+      $id=intval($_GET['id']);
       delete_trade_entry($id);
     }else{
       echo ( json_encode(
         array(
+          'status' => 204,
           'message' => 'no id provided'
         ) 
       )); 
@@ -62,6 +69,7 @@ switch($request_method)
 
 // -------- CREATE -------- 
 function create_trade_entry(){
+
   $database = new Database();
   $db = $database->getConnection();
   $response = array();
@@ -84,9 +92,11 @@ function create_trade_entry(){
   
   // create the product
   if($tradeEntry->create()){
-    $response['message'] = "Trade entry was created.";
+    $response['status']  = 200;
+    $response['message'] = 'Trade entry was created.';
   }else{
-    $response['message'] = "Unable to create trade entry.";
+    $response['status']  = 200;
+    $response['message'] = 'Unable to create trade entry.';
   } 
   echo(json_encode($response));
 }
@@ -108,7 +118,9 @@ function get_trade_entries(){
   if($num>0){
   // products array
     $entries_arr = array();
-    $entries_arr["records"] = array();
+    $entries_arr['status'] = 200;
+    $entries_arr['message'] = 'Successfully received trades.';
+    $entries_arr['data']['records'] = array();
     
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -120,25 +132,28 @@ function get_trade_entries(){
       extract($row);
       
       $trade_item = array(
-        "id" => $id,
-        "user_id" => $user_id,
-        "trade_id" => $trade_id,
-        "exchange_id" => $exchange_id,
-        "trade_pair" => $trade_pair,
-        "date" => $date,
-        "qty" => $qty,
-        "price" => $price,
-        "fully_closed" => $fully_closed
+        'id' => $id,
+        'user_id' => $user_id,
+        'trade_id' => $trade_id,
+        'exchange_id' => $exchange_id,
+        'trade_pair' => $trade_pair,
+        'date' => $date,
+        'qty' => $qty,
+        'price' => $price,
+        'fully_closed' => $fully_closed
       );
       
-      array_push($entries_arr["records"], $trade_item);
+      array_push($entries_arr['data']['records'], $trade_item);
     }
     
     echo json_encode($entries_arr);
     
   }else{
     echo json_encode(
-      array("message" => "No trade entries found.")
+      array(
+        'status' => 200,
+        'message' => 'No trade entries found.'
+      )
     );
   }
 }
@@ -161,20 +176,22 @@ function get_trade_entry_single($id = 0){
   
   if( is_null($TradeEntry->id) ){
     $response = array(
+      'status' => 404,
       'message' => 'record not found'
     );
     
   }else{
     $response = array(
-      "id" =>  $tradeEntry->id,
-      "user_id" => $tradeEntry->user_id,
-      "trade_id" => $tradeEntry->trade_id,
-      "exchange_id" => $tradeEntry->exchange_id,
-      "trade_pair" => $tradeEntry->trade_pair,
-      "date" => $tradeEntry->date,
-      "qty" => $tradeEntry->qty,
-      "price" => $tradeEntry->price,
-      "fully_closed" => $tradeEntry->fully_closed,    
+      'status' => 200,
+      'id' =>  $tradeEntry->id,
+      'user_id' => $tradeEntry->user_id,
+      'trade_id' => $tradeEntry->trade_id,
+      'exchange_id' => $tradeEntry->exchange_id,
+      'trade_pair' => $tradeEntry->trade_pair,
+      'date' => $tradeEntry->date,
+      'qty' => $tradeEntry->qty,
+      'price' => $tradeEntry->price,
+      'fully_closed' => $tradeEntry->fully_closed,    
     );  
   }
   
@@ -208,9 +225,11 @@ function update_trade_entry($id){
   
   // update the tradeEntry
   if($tradeEntry->update()){
-    $response['message'] = "Trade entry was updated.";
+    $response['status']  = 200;
+    $response['message'] = 'Trade entry was updated.';
   }else{
-    $response['message'] = "Unable to update trade entry.";
+    $response['status']  = 204;
+    $response['message'] = 'Unable to update trade entry.';
   }
   
   echo(json_encode($response));
@@ -234,8 +253,10 @@ function delete_trade_entry($id){
   
   // delete the trade-entry
   if($tradeEntry->delete()){
+    $response['status']  = 200;
     $response['message'] = 'Trade entry was deleted.';
   }else{
+    $response['status']  = 204;
     $response['message'] = 'Unable to delete trade entry.';
   }
   echo json_encode($response);

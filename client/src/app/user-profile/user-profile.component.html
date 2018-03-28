@@ -1,0 +1,30 @@
+<div>
+  
+  <app-password></app-password>
+  
+</div>
+
+<div>
+<h2>API Settings</h2>
+
+<ul>
+  <li *ngFor="let exchange of exchanges" >
+    <div>
+      <p>{{exchange.name}}</p>
+      <form>
+      <label>API Key</label>
+      <input type="text"  value="{{exchange.key}}"  />
+      <label>API Secret</label>
+      <input type="text" name="apiSecret{{exchange}}"   />
+      <button>Edit</button>
+      <button (click)="updateApiDetails('as' ,'df')">Save</button>
+    </form>
+    </div>
+  </li>
+</ul>
+<hr>
+<input name="test" [(ngModel)]="test"  />
+<p>test: {{test}}</p>
+
+binance key: {{apiKeyBinance}}
+</div>

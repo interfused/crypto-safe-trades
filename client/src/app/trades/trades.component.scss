@@ -1,0 +1,92 @@
+@import "../../variables.scss";
+@import "../../utils.scss";
+
+h2.page-title{
+  text-transform: uppercase;  
+}
+
+.trade-item{
+  
+  &__wrapper{
+    display: flex;
+    flex-direction: row;  
+  }
+  
+  &__entry-detail{
+    width: 30%;
+    padding: $padding-px;
+  }
+  
+  &__exit-details{
+    flex-grow: 1;
+    padding: $padding-px;
+  }
+}
+
+.trade-item-header{
+  @extend .tight;
+}
+
+.trade-item__entry-detail{
+  h4{
+    @extend .tight;
+  }
+}
+
+.trade-item__exit-details{
+  h4{
+    @extend .tight;
+  }
+}
+
+label{
+  display: block;
+}
+.form-group{
+  padding-bottom: 1em;
+}
+
+.trade-pair__summary-items-wrapper{
+  max-height: 21em;
+  overflow: auto;
+  border: 1px solid #ccc;
+  margin-bottom: 1em;
+}
+
+.trade-pair__summary{
+  padding: $padding-px/2;
+  
+  &:nth-of-type(even){
+    background-color: #efefef;
+  }
+}
+
+ul.pricing {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li{
+      width: 14.28%;
+      font-size: .9rem;
+      
+      &.actions{
+        text-align: right;
+      }
+    }
+}
+
+ul.pricing.header {
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+fieldset#baseCurrency {
+  border: none;
+  label{
+    display: inline;
+    margin-right: 2em;
+  }
+}
